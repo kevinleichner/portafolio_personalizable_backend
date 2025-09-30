@@ -1,53 +1,8 @@
 const { generarJWT } = require("../helpers/jwt");
 const Usuario = require("../models/Usuario");
 const bcrypt = require('bcryptjs');
-
-const crearUsuario = async(req, res) => {
-    
-    const {usuario, clave} = req.body;
-
-    try {
-
-        let usuarioObj = await Usuario.findOne({ usuario }); //Busca el primer usuario con ese usuario en base de datos, si no encuentra devuelve null
-
-        if (usuarioObj) {
-            res.status(400).json({
-                ok: false,
-                msg: 'Ese usuario ya está registrado.'
-            });
-        }
-
-        usuarioObj = new Usuario(req.body);
-
-        //Encriptar contraseña
-        const salt = bcrypt.genSaltSync();
-        usuarioObj.clave = bcrypt.hashSync(clave, salt);
-
-        await usuarioObj.save(); //Guardarlo en base de datos
-
-        const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
-
-        res.status(201).json({
-            ok: true,
-            msg: "Usuario creado exitosamente!",
-            uid: usuarioObj.id,
-            usuario: usuarioObj.usuario,
-            token
-        })
-
-    } catch (error) {
-
-        console.log(error)
-        res.status(500).json({
-            ok: false,
-            msg: 'Hubo un problema creando el nuevo usuario.'
-        })
-
-    }
-    
-
-
-};
+const Portafolio = require('../models/Portafolio');
+const {CONFIG_DEFECTO} = require("../config/configDefecto");
 
 const iniciarSesion = async(req, res) => {
     
@@ -89,6 +44,100 @@ const iniciarSesion = async(req, res) => {
 
     }
 
+};
+
+const crearUsuario = async (req, res) => {
+  const { usuario, clave } = req.body;
+
+  try {
+    let usuarioObj = await Usuario.findOne({ usuario });
+
+    if (usuarioObj) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Ya hay una cuenta registrada con ese usuario, utilice otro.'
+      });
+    }
+
+    usuarioObj = new Usuario(req.body);
+
+    const salt = bcrypt.genSaltSync();
+    usuarioObj.clave = bcrypt.hashSync(clave, salt);
+
+    await usuarioObj.save();
+
+    usuarioObj = await Usuario.findOne({ usuario });
+
+    console.log(usuarioObj._id);
+
+    const portafolioObj = new Portafolio({
+      usuario: usuarioObj._id, // clave foránea
+      config: {
+        ...CONFIG_DEFECTO,
+        urlUsuario: usuarioObj.usuario
+      }
+    });
+
+    await portafolioObj.save();   
+
+    const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
+
+    res.status(201).json({
+      ok: true,
+      msg: "Registro exitoso!",
+      token
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hubo un problema registrando la cuenta, reintente en unos segundos.'
+    });
+  }
+};
+
+const restablecerClave = async(req, res) => {
+    
+    const {usuario, codigoSeguridad, nuevaClave} = req.body;
+
+    try {
+
+        const usuarioObj = await Usuario.findOne({ usuario, codigoSeguridad }); 
+        
+        if (usuarioObj) {
+
+            const nuevoUsuario = {
+                ...req.body,
+                clave : nuevaClave                
+            }
+
+            await Usuario.findByIdAndUpdate(usuarioObj.id, nuevoUsuario, { new: true} ); 
+    
+            const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
+
+            return res.status(200).json({
+                ok: true,
+                msg: "Clave restablecida correctamente!",
+                token
+            })
+        }
+    
+        res.status(400).json({
+            ok: false,
+            msg: 'La convinación de usuario y código de seguridad es incorrecta.'
+        });       
+
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            msg: 'Hubo un problema recuperando la clave, intente nuevamente en unos segundos.'
+        })
+
+    }
+
     
 };
 
@@ -96,7 +145,7 @@ const revalidarToken = async(req, res) => {
     
     const {uid, usuario} = req;
 
-    const token = await generarJWT(uid, usuario);
+    await generarJWT(uid, usuario);
 
     res.json({
         ok: true,
@@ -111,6 +160,7 @@ const revalidarToken = async(req, res) => {
 module.exports = {
     crearUsuario,
     iniciarSesion,
-    revalidarToken
+    revalidarToken,
+    restablecerClave
 };
 

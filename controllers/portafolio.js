@@ -34,6 +34,7 @@ const getPortafolio = async( req, res) => {
 const actualizarPortafolio = async( req, res = response) => {
 
     const usuario = req.params.uid;
+    const {urlUsuario} = req.body;
 
     try {
         const portafolio = await Portafolio.findOne({ usuario });
@@ -41,7 +42,7 @@ const actualizarPortafolio = async( req, res = response) => {
         if(!portafolio) {
             res.status(404).json({
                 ok: false,
-                msg: 'No existe un portafolio para esa id'
+                msg: 'No se encontró la configuración de tu portafolio por lo que no se pudo guardar los cambios. Intente en unos segundos nuevamente.'
             });
         }
 
@@ -52,12 +53,23 @@ const actualizarPortafolio = async( req, res = response) => {
             });
         }
 
+        if (portafolio.config.urlUsuario !== urlUsuario) {
+            const portafolio = await Portafolio.findOne({ 'config.urlUsuario': urlUsuario });
+
+            if(portafolio != null){
+                return res.status(401).json({
+                    ok: false,
+                    msg: 'Ya existe otro portafolio con esa Url, por favor elija otra.'
+                });
+            }
+        }
+
         const nuevoPortafolio = {
             config: req.body, 
             usuario,
         };
                                              
-        const portafolioActualizado = await Portafolio.findByIdAndUpdate(portafolio.id, nuevoPortafolio, { new: true} ); 
+        await Portafolio.findByIdAndUpdate(portafolio.id, nuevoPortafolio, { new: true} ); 
 
         res.json({
             ok: true,

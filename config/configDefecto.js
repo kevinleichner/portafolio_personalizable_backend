@@ -1,5 +1,6 @@
 export const CONFIG_DEFECTO = {
     urlUsuario: '',
+    mostrarCartel: true,
     navbar: {
         colorTexto: "#000",
         colorFondo: "#ffff"
@@ -36,8 +37,8 @@ export const CONFIG_DEFECTO = {
     },
     conocimientos: {
         id: "1",
-        orden: 0,
-        activo: false,
+        orden: 1,
+        activo: true,
         titulo: "Titulo",
         orientacionTitulo: "center",
         colorTitulo: "#000",
@@ -142,6 +143,7 @@ export const CONFIG_DEFECTO = {
         titulo: "Contacto",
         orientacionTitulo: "center",
         colorTitulo: "#000",
+        email: "",
         colorFondo: "#ffff",
         colorBoton: "#1a5fad",
         colorTextoBoton: "#ffff",

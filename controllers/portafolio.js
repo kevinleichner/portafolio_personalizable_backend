@@ -1,14 +1,22 @@
 const {response} = require('express');
+const mongoose = require('mongoose');
 const Portafolio = require('../models/Portafolio');
 
 const getPortafolio = async( req, res) => {
 
     try {
 
-        const {uid} = req.params;
+        const { uid } = req.params;
 
-        const portafolio = await Portafolio.findOne({ usuario: uid })
-            .populate('usuario', 'config');
+        let portafolio;
+
+        if (mongoose.Types.ObjectId.isValid(uid)) {
+            portafolio = await Portafolio.findOne({ usuario: uid })
+                .populate('usuario', 'config');
+        } else {
+            portafolio = await Portafolio.findOne({ "config.urlUsuario": uid })
+                .populate('usuario', 'config');
+        }
 
         if (!portafolio) {
             return res.status(404).json({
@@ -23,7 +31,6 @@ const getPortafolio = async( req, res) => {
         })
         
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             ok: false,
             msg: 'Ocurrió un error al querer obtener el portafolio.'

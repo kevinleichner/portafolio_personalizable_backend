@@ -17,7 +17,7 @@ export const CONFIG_DEFECTO = {
         redesSociales : [
             {
                 icono: "fa-facebook",              
-                url : "www.",
+                url : "www.facebook.com",
                 colorIcono: "#fff",
                 colorFondo: "#178cff"
             }

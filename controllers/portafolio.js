@@ -13,7 +13,7 @@ const getPortafolio = async( req, res) => {
         if (!portafolio) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No se encontró portafolio para este usuario'
+                msg: 'No se encontró portafolio para este usuario.'
             });
         }
 
@@ -26,7 +26,7 @@ const getPortafolio = async( req, res) => {
         console.error(error);
         res.status(500).json({
             ok: false,
-            msg: 'Ocurrió un error al querer obtener el portafolio'
+            msg: 'Ocurrió un error al querer obtener el portafolio.'
         });
     }
 }
@@ -57,7 +57,7 @@ const actualizarPortafolio = async( req, res = response) => {
             const portafolio = await Portafolio.findOne({ 'config.urlUsuario': urlUsuario });
 
             if(portafolio != null){
-                return res.status(401).json({
+                return res.status(409).json({
                     ok: false,
                     msg: 'Ya existe otro portafolio con esa Url, por favor elija otra.'
                 });
@@ -80,7 +80,7 @@ const actualizarPortafolio = async( req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Ocurrio un error al intentar actualizar el portafolio'
+            msg: 'Ocurrio un error al intentar actualizar el portafolio.'
         });     
     }    
 }

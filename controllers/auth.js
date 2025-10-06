@@ -68,13 +68,18 @@ const crearUsuario = async (req, res) => {
 
     usuarioObj = await Usuario.findOne({ usuario });
 
-    console.log(usuarioObj._id);
+    let url = await Portafolio.findOne({ "config.urlUsuario": usuarioObj.usuario });
+            
+    if(url) {
+        const idString = usuarioObj._id.toString();
+        url = usuarioObj.usuario + idString.substring(0, 15);
+    }
 
     const portafolioObj = new Portafolio({
       usuario: usuarioObj._id, // clave foránea
       config: {
         ...CONFIG_DEFECTO,
-        urlUsuario: usuarioObj.usuario
+        urlUsuario: url
       }
     });
 

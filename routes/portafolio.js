@@ -3,7 +3,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const {getPortafolio, actualizarPortafolio} = require('../controllers/portafolio');
+const {getPortafolio, actualizarPortafolio, verificarExisteUrl} = require('../controllers/portafolio');
 
 router.get(
     '/obtener/:uid', 

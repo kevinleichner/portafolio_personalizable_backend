@@ -8,30 +8,18 @@ export const CONFIG_DEFECTO = {
     perfil: {
         titulo: "Nombre y apellido",
         colorTitulo: "#000",
-        colorFondo: "#b7e4c7",
+        colorFondo: "#7fb89e",
         colorTexto: "#000",
         colorBorde: "#000",
         anchoBorde: "1",
-        descripcion: "Descripción",
+        descripcion: "Información personal",
         imagen: "../img/perfil.jpg",
         redesSociales : [
             {
                 icono: "fa-facebook",              
-                url : "facebook.com",
-                colorIcono: "#000",
-                colorFondo: "#ffff"
-            },
-            {
-                icono: "fa-facebook",              
-                url : "facebook.com",
-                colorIcono: "#000",
-                colorFondo: "#ffff"
-            },
-            {
-                icono: "fa-facebook",              
-                url : "facebook.com",
-                colorIcono: "#000",
-                colorFondo: "#ffff"
+                url : "www.",
+                colorIcono: "#fff",
+                colorFondo: "#178cff"
             }
         ]       
     },
@@ -39,15 +27,15 @@ export const CONFIG_DEFECTO = {
         id: "1",
         orden: 1,
         activo: true,
-        titulo: "Titulo",
-        orientacionTitulo: "center",
+        titulo: "Módulo C",
+        alineacionTitulo: "center",
         colorTitulo: "#000",
-        colorFondo: "#ffff",
+        colorFondo: "#965959",
         conocimientos: [
             {
-                imagen: "../img-conocimientos/css.png",
-                texto: "HTML",
-                colorFondo: "#ccc",
+                imagen: "../img/conocimiento-defecto.png",
+                texto: "Texto",
+                colorFondo: "#e6e6e6",
                 colorTexto: "#000"
             }
         ]      
@@ -56,16 +44,16 @@ export const CONFIG_DEFECTO = {
         id: "2",
         orden: 0,
         activo: false,
-        titulo: "Titulo",
-        orientacionTitulo: "center",
+        titulo: "Módulo E",
+        alineacionTitulo: "center",
         colorTitulo: "#000",
-        colorFondo: "#ccc",      
+        colorFondo: "#b6c9e3",      
         tarjetas: [
             {
-                puesto: "Rol o puesto",
-                empresa: "Nombre de empresa",
-                tiempo: "Enero 2020 - Febrero 2021",
-                descripcion: "Descripcion experiencia",
+                puesto: "Título ejemplo",
+                empresa: "Subtítulo ejemplo",
+                tiempo: "Texto1 - Texto2",
+                descripcion: "Descripcion ejemplo",
                 colorTexto: "#000",
                 colorFondo: "#ffff"
             }
@@ -75,62 +63,42 @@ export const CONFIG_DEFECTO = {
         id: "3",
         activo: false,
         orden: 0,
-        titulo: "Titulo",
-        orientacionTitulo: "center",
+        titulo: "Módulo P",
+        alineacionTitulo: "center",
         colorTitulo: "#000",
-        colorFondo: "#ccc",               
+        colorFondo: "#598096",               
         proyectos: [
             {
-                titulo: "Titulo",
+                titulo: "Título",
                 colorBoton: "#1a5fad",  
-                colorTexto: "#000",
+                colorTexto: "#fff",
                 colorFondoEtiqueta: "#1a5fad",           
-                imagenFondo: "../img-proyectos/ahorcado.jpg",
+                imagenFondo: "../img/defecto.png",
                 etiquetas: [
                     {
                         texto: "Etiqueta",                                           
                     },
                     {
                         texto: "Etiqueta",                                            
-                    },
-                    {
-                        texto: "Etiqueta",                                                                 
-                    }
-                    
+                    }     
                 ],
-                //Ventanita que se abre al presionar "Ver más"
                 colorFondoImagenes:"#ccc",
-                colorFondoTexto:"#ffff",
+                colorFondoTexto:"#1c2c2c",
                 imagenes: [
                     {
-                        url: "../img-vista-proyecto/foto5.jpg"
+                        url: "../img/proyecto-defecto.png"
                     },
                     {
-                        url: "../img-proyectos/banco.jpg"
-                    },
-                    {
-                        url: "../img-proyectos/banco.jpg"
-                    },
-                    {
-                        url: "../img-vista-proyecto/foto4.jpg"
-                    },
-                    {
-                        url: "../img-vista-proyecto/foto6.jpg"
+                        url: "../img/defecto.png"
                     }
                 ],
-                descripcion: "Descripcion proyecto",
+                descripcion: "Descripción",
                 botones: [
                     {
-                        imagen: "../img-botones/descargas.png",
+                        imagen: "../img/descargar.png",
                         texto: "Descargar",
                         color: "#07e71b",
-                        url: "facebook.com"
-                    },
-                    {
-                        imagen: "../img-botones/descargas.png",
-                        texto: "Descargar",
-                        color: "#07e71b",
-                        url: "facebook.com"
+                        url: "www."
                     }
                 ]
             }
@@ -141,7 +109,7 @@ export const CONFIG_DEFECTO = {
         activo: false,
         orden: 0,
         titulo: "Contacto",
-        orientacionTitulo: "center",
+        alineacionTitulo: "center",
         colorTitulo: "#000",
         email: "",
         colorFondo: "#ffff",

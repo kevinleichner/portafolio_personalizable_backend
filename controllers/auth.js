@@ -107,9 +107,12 @@ const restablecerClave = async(req, res) => {
         
         if (usuarioObj) {
 
+            const salt = bcrypt.genSaltSync();
+            const nuevaClaveHasheada = bcrypt.hashSync(nuevaClave, salt);
+
             const nuevoUsuario = {
                 ...req.body,
-                clave : nuevaClave                
+                clave : nuevaClaveHasheada                
             }
 
             await Usuario.findByIdAndUpdate(usuarioObj.id, nuevoUsuario, { new: true} ); 

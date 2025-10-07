@@ -10,7 +10,10 @@ const app = express();
 dbConnection();
 
 //CORS
-app.use(cors());
+app.use(cors({
+    origin: process.env.URL_FRONTEND,
+    credentials: true
+}));
 
 //Directorio Público
 app.use( express.static('public')); //Mostrar la carpeta public

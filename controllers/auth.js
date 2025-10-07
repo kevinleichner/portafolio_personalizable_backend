@@ -153,12 +153,13 @@ const revalidarToken = async(req, res) => {
     
     const {uid, usuario} = req;
 
-    await generarJWT(uid, usuario);
+    const token = await generarJWT(uid, usuario);
 
     res.json({
         ok: true,
         uid,
-        usuario
+        usuario,
+        token
     });
 
 };

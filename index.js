@@ -12,7 +12,9 @@ dbConnection();
 //CORS
 app.use(cors({
     origin: process.env.URL_FRONTEND,
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 //Directorio Público

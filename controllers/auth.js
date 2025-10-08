@@ -5,12 +5,12 @@ const Portafolio = require('../models/Portafolio');
 const {CONFIG_DEFECTO} = require("../config/configDefecto");
 
 const iniciarSesion = async(req, res) => {
-    
-    const {usuario, clave} = req.body;
+    const usuarioMinusculas = req.body.usuario.toLowerCase();
+    const {clave} = req.body;
 
     try {
 
-        const usuarioObj = await Usuario.findOne({ usuario }); //Busca el primer usuario con ese usuario en base de datos, si no encuentra devuelve null
+        const usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas }); //Busca el primer usuario con ese usuario en base de datos, si no encuentra devuelve null
         
         if (usuarioObj) {
             const claveCorrecta = await bcrypt.compare( clave, usuarioObj.clave );
@@ -47,10 +47,11 @@ const iniciarSesion = async(req, res) => {
 };
 
 const crearUsuario = async (req, res) => {
-  const { usuario, clave } = req.body;
+  const usuarioMinusculas = req.body.usuario.toLowerCase();
+  const { clave } = req.body;
 
   try {
-    let usuarioObj = await Usuario.findOne({ usuario });
+    let usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas });
 
     if (usuarioObj) {
       return res.status(400).json({
@@ -59,20 +60,23 @@ const crearUsuario = async (req, res) => {
       });
     }
 
-    usuarioObj = new Usuario(req.body);
+    usuarioObj = new Usuario({...req.body, usuario: usuarioMinusculas});
 
     const salt = bcrypt.genSaltSync();
     usuarioObj.clave = bcrypt.hashSync(clave, salt);
 
     await usuarioObj.save();
 
-    usuarioObj = await Usuario.findOne({ usuario });
+    usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas });
 
     let url = await Portafolio.findOne({ "config.urlUsuario": usuarioObj.usuario });
             
     if(url) {
         const idString = usuarioObj._id.toString();
         url = usuarioObj.usuario + idString.substring(0, 15);
+    }
+    else {
+        url = usuarioObj.usuario
     }
 
     const portafolioObj = new Portafolio({
@@ -103,12 +107,12 @@ const crearUsuario = async (req, res) => {
 };
 
 const restablecerClave = async(req, res) => {
-    
-    const {usuario, codigoSeguridad, nuevaClave} = req.body;
+    const usuarioMinusculas = req.body.usuario.toLowerCase();
+    const {codigoSeguridad, nuevaClave} = req.body;
 
     try {
 
-        const usuarioObj = await Usuario.findOne({ usuario, codigoSeguridad }); 
+        const usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas, codigoSeguridad }); 
         
         if (usuarioObj) {
 
@@ -150,15 +154,15 @@ const restablecerClave = async(req, res) => {
 };
 
 const revalidarToken = async(req, res) => {
-    
-    const {uid, usuario} = req;
+    const usuarioMinusculas = req.usuario.toLowerCase();   
+    const {uid} = req;
 
-    const token = await generarJWT(uid, usuario);
+    const token = await generarJWT(uid, usuarioMinusculas);
 
     res.json({
         ok: true,
         uid,
-        usuario,
+        usuario: usuarioMinusculas,
         token
     });
 

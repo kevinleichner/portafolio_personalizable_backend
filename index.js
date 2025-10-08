@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'x-token']
 }));
 
-app.options('*', cors({
+app.options(/.*/, cors({
     origin: process.env.URL_FRONTEND,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

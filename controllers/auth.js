@@ -48,7 +48,7 @@ const iniciarSesion = async(req, res) => {
 
 const crearUsuario = async (req, res) => {
   const usuarioMinusculas = req.body.usuario.toLowerCase();
-  const { clave } = req.body;
+  const { clave, codigoSeguridad } = req.body;
 
   try {
     let usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas });
@@ -64,6 +64,7 @@ const crearUsuario = async (req, res) => {
 
     const salt = bcrypt.genSaltSync();
     usuarioObj.clave = bcrypt.hashSync(clave, salt);
+    usuarioObj.codigoSeguridad = bcrypt.hashSync(codigoSeguridad, salt);
 
     await usuarioObj.save();
 
@@ -110,29 +111,34 @@ const restablecerClave = async(req, res) => {
     const usuarioMinusculas = req.body.usuario.toLowerCase();
     const {codigoSeguridad, nuevaClave} = req.body;
 
-    try {
-
-        const usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas, codigoSeguridad }); 
+    try {    
+        const usuarioObj = await Usuario.findOne({ usuario: usuarioMinusculas }); 
         
         if (usuarioObj) {
 
-            const salt = bcrypt.genSaltSync();
-            const nuevaClaveHasheada = bcrypt.hashSync(nuevaClave, salt);
+            const codigoCorrecto = await bcrypt.compare( codigoSeguridad, usuarioObj.codigoSeguridad );
 
-            const nuevoUsuario = {
-                ...req.body,
-                clave : nuevaClaveHasheada                
-            }
+            if (codigoCorrecto) {
 
-            await Usuario.findByIdAndUpdate(usuarioObj.id, nuevoUsuario, { new: true} ); 
+                const salt = bcrypt.genSaltSync();
+                const nuevaClaveHasheada = bcrypt.hashSync(nuevaClave, salt);
     
-            const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
-
-            return res.status(200).json({
-                ok: true,
-                msg: "Clave restablecida correctamente!",
-                token
-            })
+                await Usuario.findByIdAndUpdate(
+                usuarioObj.id,
+                { 
+                    clave: nuevaClaveHasheada
+                },
+                { new: true }
+                ); 
+        
+                const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
+    
+                return res.status(200).json({
+                    ok: true,
+                    msg: "Clave restablecida correctamente!",
+                    token
+                })
+            }
         }
     
         res.status(400).json({

@@ -11,7 +11,7 @@ const UsuarioSchema = Schema({
         require: true
     },
     codigoSeguridad: {
-        type: Number,
+        type: String,
         require: true
     }
 });

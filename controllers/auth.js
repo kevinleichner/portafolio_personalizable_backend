@@ -90,12 +90,9 @@ const crearUsuario = async (req, res) => {
 
     await portafolioObj.save();   
 
-    const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
-
     res.status(201).json({
       ok: true,
-      msg: "Registro exitoso!",
-      token
+      msg: "Registro exitoso!"
     });
 
   } catch (error) {
@@ -130,20 +127,17 @@ const restablecerClave = async(req, res) => {
                 },
                 { new: true }
                 ); 
-        
-                const token = await generarJWT(usuarioObj.id, usuarioObj.usuario);
     
                 return res.status(200).json({
                     ok: true,
-                    msg: "Clave restablecida correctamente!",
-                    token
+                    msg: "Clave restablecida correctamente!"
                 })
             }
         }
     
         res.status(400).json({
             ok: false,
-            msg: 'La convinación de usuario y código de seguridad es incorrecta.'
+            msg: 'La combinación de usuario y código de seguridad es incorrecta.'
         });       
 
     } catch (error) {
